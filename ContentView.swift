@@ -1,50 +1,35 @@
-//
-//  ContentView.swift
-//  Shared
-//
-//  Created by Saxon Dean on 31/3/22.
-//
-
 import SwiftUI
-
-struct ContentView: View {
-    var body: some View {
-        //Call detail view functions
-        let itemList = listOfItems()
-        let checkList = listOfBools()
-        
-        //Build list view
-        NavigationView {
-            //List the strings
-            VStack{
-                //change for loop to ForEach loop
-                for i in itemList {
-                    HStack {
-                        Text(i)
-                    }
-                }
-            }
-            //List the check boxes
-            VStack{
-                //change for loop to ForEach loop
-                for c in checkList {
-                    HStack {
-                        //Check if the box should be ticked
-                        if i = true {
-                            Image("activeTick")
+/*
+ Content view is used to create the structure of the navigation which then utalises the MasterView to place
+ items within the navigation
+ */
+struct ContentView : View {
+    //is viewd by the viewmodel for any changes done to the array
+    @ObservedObject var viewModel: ViewModel
+    
+    var body: some View{
+                NavigationView {
+                    //shows the MasterView which then utalizes the ViewModel file
+                    MasterView(viewModel: viewModel)
+                    .navigationBarTitle(Text(ViewModel.listTitle))
+                    //Configures the navigation bar items for the view.
+                    .navigationBarItems(
+                        leading: EditButton(),
+                        trailing:HStack {
+                            //A button is a  control that performs an action when triggered.
+                            //performs the addElement func in the ViewModel file
+                            Button(action:{withAnimation{self.viewModel.addElement()}
+                            }){
+                                Image(systemName: "tick")
+                            }
                         }
-                        else {
-                            Image("inactiveTick")
-                        }
-                    }
-                }
-            }
+                    )
         }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(viewModel: ViewModel())
     }
 }
